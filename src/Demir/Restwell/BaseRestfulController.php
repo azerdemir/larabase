@@ -11,7 +11,7 @@ use View;
 /**
  * Class BaseController with RESTful features.
  *
- * @package Ecomercy\Controllers
+ * @package Demir\Restwell
  */
 class BaseRestfulController extends BaseAuthController
 {
@@ -25,7 +25,7 @@ class BaseRestfulController extends BaseAuthController
     /**
      * Service object.
      *
-     * @var Ecomercy\Services\BaseService
+     * @var Demir\Restwell\BaseService
      */
     protected $service;
 

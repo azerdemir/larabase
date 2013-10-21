@@ -51,6 +51,7 @@ class BaseService
      */
     public function setModel()
     {
+        //TODO: Fix static namespace
         $className = 'Ecomercy\\Models\\' . $this->modelName;
 
         if (class_exists($className)) {
