@@ -1,0 +1,23 @@
+{
+    "name": "demir/restwell",
+    "description": "",
+    "authors": [
+        {
+            "name": "Azer Demir",
+            "email": "azer.demir@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "illuminate/support": "4.0.x"
+    },
+    "autoload": {
+        "classmap": [
+            "src/migrations"
+        ],
+        "psr-0": {
+            "Demir\\Restwell": "src/"
+        }
+    },
+    "minimum-stability": "dev"
+}
