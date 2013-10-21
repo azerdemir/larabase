@@ -8,14 +8,14 @@ use Config;
 /**
  * Class BaseService for encapsulating basic methods for all services.
  *
- * @package Ecomercy\Services
+ * @package Demir\Restwell
  */
 class BaseService
 {
     /**
      * Default model instance for service.
      *
-     * @var Ecomercy\Models\BaseModel
+     * @var Demir\Restwell\BaseModel
      */
     protected $model;
 
@@ -63,7 +63,7 @@ class BaseService
     /**
      * Getter for default model.
      *
-     * @return Ecomercy\Models\BaseModel
+     * @return Demir\Restwell\BaseModel
      */
     public function getModel()
     {
@@ -102,7 +102,7 @@ class BaseService
      *
      * @param  int   $id
      * @param  array $columns
-     * @return Ecomercy\Models\BaseModel
+     * @return Demir\Restwell\BaseModel
      */
     public function find($id, array $columns = array('*'))
     {
