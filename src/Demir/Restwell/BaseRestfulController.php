@@ -16,13 +16,6 @@ use View;
 class BaseRestfulController extends BaseAuthController
 {
     /**
-     * Base layout for RESTful controllers.
-     *
-     * @var string
-     */
-    protected $layout = 'layouts.master';
-
-    /**
      * Service object.
      *
      * @var Demir\Restwell\BaseService
@@ -83,6 +76,8 @@ class BaseRestfulController extends BaseAuthController
      */
     public function __construct()
     {
+        $this->layout = Config::get('restwell::app.layouts.master');
+
         $this->beforeFilter('auth');
     }
 

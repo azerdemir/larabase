@@ -20,13 +20,6 @@ class BaseService
     protected $model;
 
     /**
-     * Default model name for service.
-     *
-     * @var string
-     */
-    protected $modelName;
-
-    /**
      * Constructor for BaseService class.
      *
      * @param string
@@ -34,14 +27,18 @@ class BaseService
     public function __construct($modelName = '')
     {
         if (empty($modelName)) {
-            list($ns1, $ns2, $serviceClassName) = explode('\\', get_called_class());
-            $position  = strpos($serviceClassName, 'Service');
-            $this->modelName =  substr($serviceClassName, 0, $position);
+            $classFullPath = explode('\\', get_called_class());
+            $lastElement   = count($classFullPath) - 1;
+
+            $classFullPath[$lastElement-1] = str_replace('Services', 'Models', $classFullPath[$lastElement-1]);
+            $classFullPath[$lastElement]   = str_replace('Service', '', $classFullPath[$lastElement]);
+
+            $modelPath = implode('\\', $classFullPath);
         } else {
-            $this->modelName = $modelName;
+            $modelPath = $modelName;
         }
 
-        $this->setModel();
+        $this->setModel($modelPath);
     }
 
     /**
@@ -49,15 +46,12 @@ class BaseService
      *
      * @throws Exception
      */
-    public function setModel()
+    public function setModel($modelPath)
     {
-        //TODO: Fix static namespace
-        $className = 'Ecomercy\\Models\\' . $this->modelName;
-
-        if (class_exists($className)) {
-            $this->model = new $className;
+        if (class_exists($modelPath)) {
+            $this->model = new $modelPath;
         } else {
-            throw new Exception($this->modelName . ' model can not be found!');
+            throw new Exception($modelPath . ' model can not be found!');
         }
     }
 
