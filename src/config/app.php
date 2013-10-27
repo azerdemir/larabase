@@ -2,7 +2,7 @@
 
 return array(
     'layouts' => array(
-        'master' => 'admin::layouts.master'
+        'master' => ''
     ),
     'pagelimit' => 10
 );

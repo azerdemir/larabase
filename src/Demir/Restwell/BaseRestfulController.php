@@ -76,9 +76,9 @@ class BaseRestfulController extends BaseAuthController
      */
     public function __construct()
     {
-        $this->layout = Config::get('restwell::app.layouts.master');
-
         $this->beforeFilter('auth');
+
+        parent::__construct();
     }
 
     /**
@@ -106,10 +106,14 @@ class BaseRestfulController extends BaseAuthController
             $viewData = array_merge($viewData, $this->viewData);
         }
 
-        $this->layout->content = View::make(
-            $this->viewDirectory . '.index',
-            $viewData
-        );
+        $contentView = View::make($this->viewDirectory . '.index', $viewData);
+
+        if (isset($this->layout)) {
+            $this->layout->content = $contentView;
+        }
+        else {
+            return $contentView;
+        }
     }
 
     /**
@@ -129,10 +133,14 @@ class BaseRestfulController extends BaseAuthController
             $viewData = array_merge($viewData, $this->viewData);
         }
 
-        $this->layout->content = View::make(
-            $this->viewDirectory . '.edit',
-            $viewData
-        );
+        $contentView = View::make($this->viewDirectory . '.edit', $viewData);
+
+        if (isset($this->layout)) {
+            $this->layout->content = $contentView;
+        }
+        else {
+            return $contentView;
+        }
     }
 
     /**
@@ -163,10 +171,14 @@ class BaseRestfulController extends BaseAuthController
             $viewData = array_merge($viewData, $this->viewData);
         }
 
-        $this->layout->content = View::make(
-            $this->viewDirectory . '.show',
-            $viewData
-        );
+        $contentView = View::make($this->viewDirectory . '.show', $viewData);
+
+        if (isset($this->layout)) {
+            $this->layout->content = $contentView;
+        }
+        else {
+            return $contentView;
+        }
     }
 
     /**
@@ -187,10 +199,14 @@ class BaseRestfulController extends BaseAuthController
             $viewData = array_merge($viewData, $this->viewData);
         }
 
-        $this->layout->content = View::make(
-            $this->viewDirectory . '.edit',
-            $viewData
-        );
+        $contentView = View::make($this->viewDirectory . '.edit', $viewData);
+
+        if (isset($this->layout)) {
+            $this->layout->content = $contentView;
+        }
+        else {
+            return $contentView;
+        }
     }
 
     /**
