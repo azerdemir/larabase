@@ -109,6 +109,19 @@ class BaseService
     }
 
     /**
+     * Return related models via field.
+     *
+     * @param  $field
+     * @param  $value
+     * @param  array  $columns
+     * @return mixed
+     */
+    public function findByField($field, $value, $columns = array('*'))
+    {
+        return $this->model->where($field, '=', $value)->get($columns);
+    }
+
+    /**
      * Save related model with passed form data.
      *
      * @param int   $id
