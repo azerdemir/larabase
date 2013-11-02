@@ -4,5 +4,5 @@ return array(
     'layouts' => array(
         'master' => ''
     ),
-    'pagelimit' => 10
+    'pagelimit' => 4
 );

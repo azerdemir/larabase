@@ -92,7 +92,7 @@ class BaseRestfulController extends BaseAuthController
             $page = (int) Input::get('page') == 0 ? 1 : (int) Input::get('page');
             $viewData = array(
                 'page'      => $page,
-                'pageCount' => ceil($this->service->count() / Config::get('app.pagelimit'))
+                'pageCount' => ceil($this->service->count() / Config::get('restwell::pagelimit'))
             );
         }
         else {

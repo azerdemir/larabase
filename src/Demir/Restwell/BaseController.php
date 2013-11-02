@@ -11,7 +11,7 @@ class BaseController extends Controller
     public function __construct()
     {
         if (!isset($this->layout)) {
-            $masterLayout = Config::get('restwell::app.layouts.master');
+            $masterLayout = Config::get('restwell::layouts.master');
 
             if (!empty($masterLayout)) {
                 $this->layout = $masterLayout;

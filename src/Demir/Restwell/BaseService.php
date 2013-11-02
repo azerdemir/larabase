@@ -88,7 +88,7 @@ class BaseService
             return $this->model->get($columns);
         }
         else {
-            return $this->model->forPage($page, Config::get('app.pagelimit'))->get($columns);
+            return $this->model->forPage($page, Config::get('restwell::pagelimit'))->get($columns);
         }
     }
 
