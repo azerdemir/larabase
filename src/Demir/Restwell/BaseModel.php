@@ -3,7 +3,7 @@
 namespace Demir\Restwell;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
-use Illuminate\Validation\Validator;
+use Illuminate\Support\Facades\Validator;
 
 class BaseModel extends Eloquent
 {
@@ -28,5 +28,14 @@ class BaseModel extends Eloquent
     public function errors()
     {
         return $this->errors;
+    }
+
+    public function save(array $options = array())
+    {
+        if (!$this->validate()) {
+            return false;
+        }
+
+        return parent::save($options);
     }
 }

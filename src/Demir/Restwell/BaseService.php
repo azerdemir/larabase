@@ -20,11 +20,29 @@ class BaseService
     protected $model;
 
     /**
+     * Default class path for model.
+     *
+     * @var string
+     */
+    protected $modelPath;
+
+    /**
      * Constructor for BaseService class.
      *
      * @param string
      */
     public function __construct($modelName = '')
+    {
+        $this->setModelPath($modelName);
+        $this->setModel();
+    }
+
+    /**
+     * Set $modelPath class variable.
+     *
+     * @param string $modelName
+     */
+    public function setModelPath($modelName)
     {
         if (empty($modelName)) {
             $classFullPath = explode('\\', get_called_class());
@@ -33,25 +51,28 @@ class BaseService
             $classFullPath[$lastElement-1] = str_replace('Services', 'Models', $classFullPath[$lastElement-1]);
             $classFullPath[$lastElement]   = str_replace('Service', '', $classFullPath[$lastElement]);
 
-            $modelPath = implode('\\', $classFullPath);
-        } else {
-            $modelPath = $modelName;
-        }
+            $this->modelPath = implode('\\', $classFullPath);
 
-        $this->setModel($modelPath);
+        } else {
+            $this->modelPath = $modelName;
+        }
     }
 
     /**
-     * Setter for default model.
+     * Set new BaseModel instance for default model.
      *
      * @throws Exception
      */
-    public function setModel($modelPath)
+    public function setModel($modelPath = '')
     {
-        if (class_exists($modelPath)) {
+        if (isset($modelPath) && class_exists($modelPath)) {
             $this->model = new $modelPath;
+
+        } elseif (isset($this->modelPath) && class_exists($this->modelPath)) {
+            $this->model = new $this->modelPath;
+
         } else {
-            throw new Exception($modelPath . ' model can not be found!');
+            throw new Exception('Model can not be found!');
         }
     }
 
@@ -102,10 +123,14 @@ class BaseService
     public function find($id, array $columns = array('*'))
     {
         if (empty($id)) {
-            return $this->model;
+            // assigning an empty model to $model variable
+            $this->setModel();
+
         } else {
-            return $this->model->find($id, $columns);
+            $this->model = $this->model->find($id, $columns);
         }
+
+        return $this->model;
     }
 
     /**
@@ -129,13 +154,8 @@ class BaseService
      */
     public function save($id, array $formData)
     {
-        if (!empty($id)) {
-            $model = $this->find($id);
-        } else {
-            $model = $this->model;
-        }
-
-        $model->fill($formData)->save();
+        $this->find($id);
+        return $this->model->fill($formData)->save();
     }
 
     /**
@@ -146,5 +166,28 @@ class BaseService
     public function delete($id)
     {
         $this->model->find($id)->delete();
+    }
+
+    public function errors()
+    {
+        $errors[] = array(
+            'type'      => 'error',
+            'placement' => 'title',
+            'message'   => 'Validation failed!!'
+        );
+
+        $vAllErrors = $this->getModel()->errors()->getMessages();
+
+        foreach ($vAllErrors as $vElmErrors) {
+            foreach ($vElmErrors as $vError) {
+                $errors[] = array(
+                    'type'      => 'error',
+                    'placement' => 'item',
+                    'message'   => $vError
+                );
+            }
+        }
+
+        return $errors;
     }
 }

@@ -7,6 +7,7 @@ use Input;
 use Redirect;
 use URL;
 use View;
+use Notification;
 
 /**
  * Class BaseController with RESTful features.
@@ -72,6 +73,13 @@ class BaseRestfulController extends BaseAuthController
     protected $pagingEnabled = true;
 
     /**
+     * Error messages for same requests.
+     *
+     * @var array
+     */
+    protected $notifications;
+
+    /**
      * Constructor for BaseRestfulController.
      */
     public function __construct()
@@ -102,6 +110,12 @@ class BaseRestfulController extends BaseAuthController
 
         $viewData[$this->collectionKey] = $this->service->all($page);
 
+        // if notifications set, sending it to view
+        $notifications = $this->notifications();
+        if (!empty($notifications)) {
+            $viewData['notifications'] = $notifications;
+        }
+
         if (is_array($this->viewData)) {
             $viewData = array_merge($viewData, $this->viewData);
         }
@@ -124,10 +138,25 @@ class BaseRestfulController extends BaseAuthController
     protected function create()
     {
         $viewData = array(
-            $this->entityKey => $this->service->find(0),
             'method' => 'POST',
             'action' => URL::route($this->routePrefix . '.store')
         );
+
+        // if form data set, populating form data with previous request
+        // if not, populating an empty model
+        $formData = Input::get($this->viewFormElement);
+        if (!empty($formData)) {
+            $viewData[$this->entityKey] = $this->service->getModel()->fill($formData);
+        }
+        else {
+            $viewData[$this->entityKey] = $this->service->find(0);
+        }
+
+        // if notifications set, sending it to view
+        $notifications = $this->notifications();
+        if (!empty($notifications)) {
+            $viewData['notifications'] = $notifications;
+        }
 
         if (is_array($this->viewData)) {
             $viewData = array_merge($viewData, $this->viewData);
@@ -150,9 +179,16 @@ class BaseRestfulController extends BaseAuthController
      */
     protected function store()
     {
-        $this->service->save(0, Input::get($this->viewFormElement));
+        $result = $this->service->save(0, Input::get($this->viewFormElement));
 
-        return Redirect::route($this->routePrefix . '.index');
+        if (!$result) {
+            $this->notifications['error'] = $this->service->errors();
+            return $this->create();
+        }
+        else {
+            Notification::success('Item inserted.');
+            return Redirect::route($this->routePrefix . '.index');
+        }
     }
 
     /**
@@ -190,10 +226,25 @@ class BaseRestfulController extends BaseAuthController
     protected function edit($id)
     {
         $viewData = array(
-            $this->entityKey => $this->service->find($id),
             'method' => 'PUT',
             'action' => URL::route($this->routePrefix . '.update', $id)
         );
+
+        // if form data set, populating form data with previous request
+        // if not, populating an empty model
+        $formData = Input::get($this->viewFormElement);
+        if (!empty($formData)) {
+            $viewData[$this->entityKey] = $this->service->getModel()->fill($formData);
+        }
+        else {
+            $viewData[$this->entityKey] = $this->service->find($id);
+        }
+
+        // if notifications set, sending it to view
+        $notifications = $this->notifications();
+        if (!empty($notifications)) {
+            $viewData['notifications'] = $notifications;
+        }
 
         if (is_array($this->viewData)) {
             $viewData = array_merge($viewData, $this->viewData);
@@ -217,9 +268,16 @@ class BaseRestfulController extends BaseAuthController
      */
     protected function update($id)
     {
-        $this->service->save($id, Input::get($this->viewFormElement));
+        $result = $this->service->save($id, Input::get($this->viewFormElement));
 
-        return Redirect::route($this->routePrefix . '.index');
+        if (!$result) {
+            $this->notifications['error'] = $this->service->errors();
+            return $this->edit($id);
+        }
+        else {
+            Notification::success('Item updated.');
+            return Redirect::route($this->routePrefix . '.index');
+        }
     }
 
     /**
@@ -232,6 +290,29 @@ class BaseRestfulController extends BaseAuthController
     {
         $this->service->delete($id);
 
+        Notification::success('Item deleted.');
         return Redirect::route($this->routePrefix . '.index');
+    }
+
+    /**
+     * Get all notifications for controller.
+     *
+     * @return array
+     */
+    protected function notifications()
+    {
+        $flashedNotifications = Notification::all();
+        Notification::clear();
+
+        foreach ($flashedNotifications as $fNotification) {
+            $type = $fNotification->getType();
+            $this->notifications[$type][] = array(
+                'type'      => $type,
+                'placement' => 'title',
+                'message'   => $fNotification->getMessage()
+            );
+        }
+
+        return $this->notifications;
     }
 }
