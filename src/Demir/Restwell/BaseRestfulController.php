@@ -73,13 +73,6 @@ class BaseRestfulController extends BaseAuthController
     protected $pagingEnabled = true;
 
     /**
-     * Error messages for same requests.
-     *
-     * @var array
-     */
-    protected $notifications;
-
-    /**
      * Constructor for BaseRestfulController.
      */
     public function __construct()
@@ -292,27 +285,5 @@ class BaseRestfulController extends BaseAuthController
 
         Notification::success('Item deleted.');
         return Redirect::route($this->routePrefix . '.index');
-    }
-
-    /**
-     * Get all notifications for controller.
-     *
-     * @return array
-     */
-    protected function notifications()
-    {
-        $flashedNotifications = Notification::all();
-        Notification::clear();
-
-        foreach ($flashedNotifications as $fNotification) {
-            $type = $fNotification->getType();
-            $this->notifications[$type][] = array(
-                'type'      => $type,
-                'placement' => 'title',
-                'message'   => $fNotification->getMessage()
-            );
-        }
-
-        return $this->notifications;
     }
 }
