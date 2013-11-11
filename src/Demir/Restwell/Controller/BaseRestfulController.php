@@ -2,12 +2,12 @@
 
 namespace Demir\Restwell\Controller;
 
-use Config;
-use Input;
-use Redirect;
-use URL;
-use View;
-use Krucas\Notification\Notification;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\View;
+use Krucas\Notification\Facades\Notification;
 use Demir\Restwell\Repository\RepositoryInterface;
 
 /**

@@ -2,7 +2,7 @@
 
 namespace Demir\Restwell\Repository;
 
-use Config;
+use Illuminate\Support\Facades\Config;
 use Demir\Restwell\Model\ModelInterface;
 
 /**

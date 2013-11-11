@@ -2,10 +2,10 @@
 
 namespace Demir\Restwell\Controller;
 
-use Config;
-use Controller;
-use View;
-use Krucas\Notification\Notification;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Routing\Controllers\Controller;
+use Illuminate\Support\Facades\View;
+use Krucas\Notification\Facades\Notification;
 use Demir\Restwell\Repository\RepositoryInterface;
 
 class BaseController extends Controller
