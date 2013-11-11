@@ -1,14 +1,22 @@
 <?php
 
-namespace Demir\Restwell;
+namespace Demir\Restwell\Controller;
 
 use Config;
 use Controller;
 use View;
-use Notification;
+use Krucas\Notification\Notification;
+use Demir\Restwell\Repository\RepositoryInterface;
 
 class BaseController extends Controller
 {
+    /**
+     * Repository object.
+     *
+     * @var Demir\Restwell\BaseRepository
+     */
+    protected $repository;
+
     /**
      * Error messages for same requests.
      *
@@ -16,8 +24,10 @@ class BaseController extends Controller
      */
     protected $notifications;
 
-    public function __construct()
+    public function __construct(RepositoryInterface $repository)
     {
+        $this->repository = $repository;
+
         if (!isset($this->layout)) {
             $masterLayout = Config::get('restwell::layouts.master');
 

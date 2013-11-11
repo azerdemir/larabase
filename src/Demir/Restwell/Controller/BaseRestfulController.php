@@ -1,13 +1,14 @@
 <?php
 
-namespace Demir\Restwell;
+namespace Demir\Restwell\Controller;
 
 use Config;
 use Input;
 use Redirect;
 use URL;
 use View;
-use Notification;
+use Krucas\Notification\Notification;
+use Demir\Restwell\Repository\RepositoryInterface;
 
 /**
  * Class BaseController with RESTful features.
@@ -16,13 +17,6 @@ use Notification;
  */
 class BaseRestfulController extends BaseAuthController
 {
-    /**
-     * Service object.
-     *
-     * @var Demir\Restwell\BaseService
-     */
-    protected $service;
-
     /**
      * Route prefix for routes.
      *
@@ -75,11 +69,11 @@ class BaseRestfulController extends BaseAuthController
     /**
      * Constructor for BaseRestfulController.
      */
-    public function __construct()
+    public function __construct(RepositoryInterface $repository)
     {
         $this->beforeFilter('auth');
 
-        parent::__construct();
+        parent::__construct($repository);
     }
 
     /**
@@ -93,7 +87,7 @@ class BaseRestfulController extends BaseAuthController
             $page = (int) Input::get('page') == 0 ? 1 : (int) Input::get('page');
             $viewData = array(
                 'page'      => $page,
-                'pageCount' => ceil($this->service->count() / Config::get('restwell::pagelimit'))
+                'pageCount' => ceil($this->repository->count() / Config::get('restwell::pagelimit'))
             );
         }
         else {
@@ -101,7 +95,7 @@ class BaseRestfulController extends BaseAuthController
             $viewData = array();
         }
 
-        $viewData[$this->collectionKey] = $this->service->all($page);
+        $viewData[$this->collectionKey] = $this->repository->all($page);
 
         // if notifications set, sending it to view
         $notifications = $this->notifications();
@@ -139,10 +133,10 @@ class BaseRestfulController extends BaseAuthController
         // if not, populating an empty model
         $formData = Input::get($this->viewFormElement);
         if (!empty($formData)) {
-            $viewData[$this->entityKey] = $this->service->getModel()->fill($formData);
+            $viewData[$this->entityKey] = $this->repository->getModel()->fill($formData);
         }
         else {
-            $viewData[$this->entityKey] = $this->service->find(0);
+            $viewData[$this->entityKey] = $this->repository->find(0);
         }
 
         // if notifications set, sending it to view
@@ -172,10 +166,10 @@ class BaseRestfulController extends BaseAuthController
      */
     protected function store()
     {
-        $result = $this->service->save(0, Input::get($this->viewFormElement));
+        $result = $this->repository->save(0, Input::get($this->viewFormElement));
 
         if (!$result) {
-            $this->notifications['error'] = $this->service->errors();
+            $this->notifications['error'] = $this->repository->errors();
             return $this->create();
         }
         else {
@@ -193,7 +187,7 @@ class BaseRestfulController extends BaseAuthController
     protected function show($id)
     {
         $viewData = array(
-            $this->entityKey => $this->service->find($id)
+            $this->entityKey => $this->repository->find($id)
         );
 
         if (is_array($this->viewData)) {
@@ -227,10 +221,10 @@ class BaseRestfulController extends BaseAuthController
         // if not, populating an empty model
         $formData = Input::get($this->viewFormElement);
         if (!empty($formData)) {
-            $viewData[$this->entityKey] = $this->service->getModel()->fill($formData);
+            $viewData[$this->entityKey] = $this->repository->getModel()->fill($formData);
         }
         else {
-            $viewData[$this->entityKey] = $this->service->find($id);
+            $viewData[$this->entityKey] = $this->repository->find($id);
         }
 
         // if notifications set, sending it to view
@@ -261,10 +255,10 @@ class BaseRestfulController extends BaseAuthController
      */
     protected function update($id)
     {
-        $result = $this->service->save($id, Input::get($this->viewFormElement));
+        $result = $this->repository->save($id, Input::get($this->viewFormElement));
 
         if (!$result) {
-            $this->notifications['error'] = $this->service->errors();
+            $this->notifications['error'] = $this->repository->errors();
             return $this->edit($id);
         }
         else {
@@ -281,7 +275,7 @@ class BaseRestfulController extends BaseAuthController
      */
     protected function destroy($id)
     {
-        $this->service->delete($id);
+        $this->repository->delete($id);
 
         Notification::success('Item deleted.');
         return Redirect::route($this->routePrefix . '.index');

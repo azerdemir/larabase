@@ -1,11 +1,11 @@
 <?php
 
-namespace Demir\Restwell;
+namespace Demir\Restwell\Model;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Support\Facades\Validator;
 
-class BaseModel extends Eloquent
+abstract class BaseEloquentModel extends Eloquent implements ModelInterface
 {
     protected $softDelete = true;
 
