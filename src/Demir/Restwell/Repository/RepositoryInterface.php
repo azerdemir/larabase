@@ -15,6 +15,4 @@ interface RepositoryInterface
     public function save($id, array $formData);
 
     public function delete($id);
-
-    public function errors();
 }

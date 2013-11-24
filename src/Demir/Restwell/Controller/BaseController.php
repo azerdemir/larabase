@@ -5,7 +5,6 @@ namespace Demir\Restwell\Controller;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Routing\Controllers\Controller;
 use Illuminate\Support\Facades\View;
-use Krucas\Notification\Facades\Notification;
 use Demir\Restwell\Repository\RepositoryInterface;
 
 class BaseController extends Controller
@@ -16,13 +15,6 @@ class BaseController extends Controller
      * @var Demir\Restwell\BaseRepository
      */
     protected $repository;
-
-    /**
-     * Error messages for same requests.
-     *
-     * @var array
-     */
-    protected $notifications;
 
     public function __construct(RepositoryInterface $repository)
     {
@@ -47,27 +39,5 @@ class BaseController extends Controller
         if (!is_null($this->layout)) {
             $this->layout = View::make($this->layout);
         }
-    }
-
-    /**
-     * Get all notifications for controller.
-     *
-     * @return array
-     */
-    protected function notifications()
-    {
-        $flashedNotifications = Notification::all();
-        Notification::clear();
-
-        foreach ($flashedNotifications as $fNotification) {
-            $type = $fNotification->getType();
-            $this->notifications[$type][] = array(
-                'type'      => $type,
-                'placement' => 'title',
-                'message'   => $fNotification->getMessage()
-            );
-        }
-
-        return $this->notifications;
     }
 }

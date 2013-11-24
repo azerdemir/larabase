@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
-use Krucas\Notification\Facades\Notification;
 use Demir\Restwell\Repository\RepositoryInterface;
 
 /**
@@ -97,12 +96,6 @@ class BaseRestfulController extends BaseAuthController
 
         $viewData[$this->collectionKey] = $this->repository->all($page);
 
-        // if notifications set, sending it to view
-        $notifications = $this->notifications();
-        if (!empty($notifications)) {
-            $viewData['notifications'] = $notifications;
-        }
-
         if (is_array($this->viewData)) {
             $viewData = array_merge($viewData, $this->viewData);
         }
@@ -124,26 +117,17 @@ class BaseRestfulController extends BaseAuthController
      */
     protected function create()
     {
+        $oldData = array_key_exists($this->viewFormElement, Input::old()) ?
+                   Input::old()[$this->viewFormElement] :
+                   array();
+        $model   = $this->repository->find(0);
+        if (!empty($oldData)) $model->fill($oldData);
+
         $viewData = array(
+            $this->entityKey => $model,
             'method' => 'POST',
             'action' => URL::route($this->routePrefix . '.store')
         );
-
-        // if form data set, populating form data with previous request
-        // if not, populating an empty model
-        $formData = Input::get($this->viewFormElement);
-        if (!empty($formData)) {
-            $viewData[$this->entityKey] = $this->repository->getModel()->fill($formData);
-        }
-        else {
-            $viewData[$this->entityKey] = $this->repository->find(0);
-        }
-
-        // if notifications set, sending it to view
-        $notifications = $this->notifications();
-        if (!empty($notifications)) {
-            $viewData['notifications'] = $notifications;
-        }
 
         if (is_array($this->viewData)) {
             $viewData = array_merge($viewData, $this->viewData);
@@ -169,12 +153,12 @@ class BaseRestfulController extends BaseAuthController
         $result = $this->repository->save(0, Input::get($this->viewFormElement));
 
         if (!$result) {
-            $this->notifications['error'] = $this->repository->errors();
-            return $this->create();
+            return Redirect::route($this->routePrefix . '.create')
+                           ->withErrors($this->repository->getModel()->errors())
+                           ->withInput();
         }
         else {
-            Notification::success('Item inserted.');
-            return Redirect::route($this->routePrefix . '.index');
+            return Redirect::route($this->routePrefix . '.index')->with('message', 'Item inserted.');
         }
     }
 
@@ -212,26 +196,17 @@ class BaseRestfulController extends BaseAuthController
      */
     protected function edit($id)
     {
+        $oldData = array_key_exists($this->viewFormElement, Input::old()) ?
+                   Input::old()[$this->viewFormElement] :
+                   array();
+        $model   = $this->repository->find($id);
+        if (!empty($oldData)) $model->fill($oldData);
+
         $viewData = array(
+            $this->entityKey => $model,
             'method' => 'PUT',
             'action' => URL::route($this->routePrefix . '.update', $id)
         );
-
-        // if form data set, populating form data with previous request
-        // if not, populating an empty model
-        $formData = Input::get($this->viewFormElement);
-        if (!empty($formData)) {
-            $viewData[$this->entityKey] = $this->repository->getModel()->fill($formData);
-        }
-        else {
-            $viewData[$this->entityKey] = $this->repository->find($id);
-        }
-
-        // if notifications set, sending it to view
-        $notifications = $this->notifications();
-        if (!empty($notifications)) {
-            $viewData['notifications'] = $notifications;
-        }
 
         if (is_array($this->viewData)) {
             $viewData = array_merge($viewData, $this->viewData);
@@ -258,12 +233,12 @@ class BaseRestfulController extends BaseAuthController
         $result = $this->repository->save($id, Input::get($this->viewFormElement));
 
         if (!$result) {
-            $this->notifications['error'] = $this->repository->errors();
-            return $this->edit($id);
+            return Redirect::route($this->routePrefix . '.edit', $id)
+                           ->withErrors($this->repository->getModel()->errors())
+                           ->withInput();
         }
         else {
-            Notification::success('Item updated.');
-            return Redirect::route($this->routePrefix . '.index');
+            return Redirect::route($this->routePrefix . '.index')->with('message', 'Item updated.');
         }
     }
 
@@ -277,7 +252,6 @@ class BaseRestfulController extends BaseAuthController
     {
         $this->repository->delete($id);
 
-        Notification::success('Item deleted.');
-        return Redirect::route($this->routePrefix . '.index');
+        return Redirect::route($this->routePrefix . '.index')->with('message', 'Item deleted.');
     }
 }

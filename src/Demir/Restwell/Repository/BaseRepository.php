@@ -115,27 +115,4 @@ abstract class BaseRepository implements RepositoryInterface
     {
         $this->model->find($id)->delete();
     }
-
-    public function errors()
-    {
-        $errors[] = array(
-            'type'      => 'error',
-            'placement' => 'title',
-            'message'   => 'Validation failed!!'
-        );
-
-        $vAllErrors = $this->getModel()->errors()->getMessages();
-
-        foreach ($vAllErrors as $vElmErrors) {
-            foreach ($vElmErrors as $vError) {
-                $errors[] = array(
-                    'type'      => 'error',
-                    'placement' => 'item',
-                    'message'   => $vError
-                );
-            }
-        }
-
-        return $errors;
-    }
 }
