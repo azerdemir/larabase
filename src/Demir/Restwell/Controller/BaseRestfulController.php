@@ -31,18 +31,11 @@ class BaseRestfulController extends BaseAuthController
     protected $viewDirectory;
 
     /**
-     * Form element array for related model.
-     *
-     * @var string
-     */
-    protected $viewFormElement;
-
-    /**
      * Data passed to views.
      *
      * @var string
      */
-    protected $viewData;
+    protected $viewData = [];
 
     /**
      * Collection variable name for index views.
@@ -117,23 +110,12 @@ class BaseRestfulController extends BaseAuthController
      */
     protected function create()
     {
-        $oldData = array_key_exists($this->viewFormElement, Input::old()) ?
-                   Input::old()[$this->viewFormElement] :
-                   array();
-        $model   = $this->repository->find(0);
-        if (!empty($oldData)) $model->fill($oldData);
+        $viewData = [$this->entityKey => $this->repository->find(0)];
 
-        $viewData = array(
-            $this->entityKey => $model,
-            'method' => 'POST',
-            'action' => URL::route($this->routePrefix . '.store')
+        $contentView = View::make(
+            $this->viewDirectory . '.create',
+            array_merge($viewData, $this->viewData)
         );
-
-        if (is_array($this->viewData)) {
-            $viewData = array_merge($viewData, $this->viewData);
-        }
-
-        $contentView = View::make($this->viewDirectory . '.edit', $viewData);
 
         if (isset($this->layout)) {
             $this->layout->content = $contentView;
@@ -150,7 +132,7 @@ class BaseRestfulController extends BaseAuthController
      */
     protected function store()
     {
-        $result = $this->repository->save(0, Input::get($this->viewFormElement));
+        $result = $this->repository->save(0, Input::all());
 
         if (!$result) {
             return Redirect::route($this->routePrefix . '.create')
@@ -196,23 +178,12 @@ class BaseRestfulController extends BaseAuthController
      */
     protected function edit($id)
     {
-        $oldData = array_key_exists($this->viewFormElement, Input::old()) ?
-                   Input::old()[$this->viewFormElement] :
-                   array();
-        $model   = $this->repository->find($id);
-        if (!empty($oldData)) $model->fill($oldData);
+        $viewData = [$this->entityKey => $this->repository->find($id)];
 
-        $viewData = array(
-            $this->entityKey => $model,
-            'method' => 'PUT',
-            'action' => URL::route($this->routePrefix . '.update', $id)
+        $contentView = View::make(
+            $this->viewDirectory . '.edit',
+            array_merge($viewData, $this->viewData)
         );
-
-        if (is_array($this->viewData)) {
-            $viewData = array_merge($viewData, $this->viewData);
-        }
-
-        $contentView = View::make($this->viewDirectory . '.edit', $viewData);
 
         if (isset($this->layout)) {
             $this->layout->content = $contentView;
@@ -230,7 +201,7 @@ class BaseRestfulController extends BaseAuthController
      */
     protected function update($id)
     {
-        $result = $this->repository->save($id, Input::get($this->viewFormElement));
+        $result = $this->repository->save($id, Input::all());
 
         if (!$result) {
             return Redirect::route($this->routePrefix . '.edit', $id)
