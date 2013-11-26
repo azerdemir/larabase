@@ -2,6 +2,7 @@
 
 namespace Demir\Restwell\Repository;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Config;
 use Demir\Restwell\Model\ModelInterface;
 
@@ -70,15 +71,7 @@ abstract class BaseRepository implements RepositoryInterface
      */
     public function find($id, array $columns = array('*'))
     {
-        if (empty($id)) {
-            // assigning an empty model to $model variable
-            $this->model = $this->model->newInstance();
-
-        } else {
-            $this->model = $this->model->find($id, $columns);
-        }
-
-        return $this->model;
+        return $this->model = empty($id) ? $this->model->newInstance() : $this->model->findOrFail($id, $columns);
     }
 
     /**
@@ -86,12 +79,18 @@ abstract class BaseRepository implements RepositoryInterface
      *
      * @param  $field
      * @param  $value
-     * @param  array  $columns
+     * @param  array $columns
      * @return mixed
+     *
+     * @throws ModelNotFoundException
      */
     public function findByField($field, $value, $columns = array('*'))
     {
-        return $this->model->where($field, '=', $value)->get($columns);
+        $model = $this->model->where($field, '=', $value)->get($columns);
+
+        if (!is_null($model)) return $this->model = $model;
+
+        throw new ModelNotFoundException;
     }
 
     /**
@@ -102,8 +101,7 @@ abstract class BaseRepository implements RepositoryInterface
      */
     public function save($id, array $formData)
     {
-        $this->find($id);
-        return $this->model->fill($formData)->save();
+        return $this->find($id)->fill($formData)->save();
     }
 
     /**
@@ -113,6 +111,6 @@ abstract class BaseRepository implements RepositoryInterface
      */
     public function delete($id)
     {
-        $this->model->find($id)->delete();
+        $this->find($id)->delete();
     }
 }
