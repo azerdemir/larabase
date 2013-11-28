@@ -63,8 +63,6 @@ class BaseRestfulController extends BaseAuthController
      */
     public function __construct(RepositoryInterface $repository)
     {
-        $this->beforeFilter('auth');
-
         parent::__construct($repository);
     }
 
