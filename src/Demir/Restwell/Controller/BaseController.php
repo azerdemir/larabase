@@ -2,8 +2,8 @@
 
 namespace Demir\Restwell\Controller;
 
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Routing\Controllers\Controller;
 use Illuminate\Support\Facades\View;
 use Demir\Restwell\Repository\RepositoryInterface;
 
