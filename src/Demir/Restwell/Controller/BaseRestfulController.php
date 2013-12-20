@@ -74,18 +74,11 @@ class BaseRestfulController extends BaseAuthController
     protected function index()
     {
         if ($this->pagingEnabled) {
-            $page = (int) Input::get('page') == 0 ? 1 : (int) Input::get('page');
-            $viewData = array(
-                'page'      => $page,
-                'pageCount' => ceil($this->repository->count() / Config::get('restwell::pagelimit'))
-            );
-        }
-        else {
-            $page     = 0;
-            $viewData = array();
-        }
+            $viewData[$this->collectionKey] = $this->repository->paginate();
 
-        $viewData[$this->collectionKey] = $this->repository->all($page);
+        } else {
+            $viewData[$this->collectionKey] = $this->repository->all();
+        }
 
         if (is_array($this->viewData)) {
             $viewData = array_merge($viewData, $this->viewData);

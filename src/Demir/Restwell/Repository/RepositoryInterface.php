@@ -6,7 +6,9 @@ interface RepositoryInterface
 {
     public function count();
 
-    public function all($page = 0, array $columns = array('*'));
+    public function all(array $columns = array('*'));
+
+    public function paginate(array $columns = array('*'));
 
     public function find($id, array $columns = array('*'));
 

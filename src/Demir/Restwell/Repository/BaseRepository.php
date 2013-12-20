@@ -46,20 +46,25 @@ abstract class BaseRepository implements RepositoryInterface
     }
 
     /**
-     * Return a collection filled with instance from default model.
+     * Return a collection filled with instances from default model.
      *
-     * @param  int   $page
      * @param  array $columns
      * @return Illuminate\Database\Eloquent\Collection
      */
-    public function all($page = 0, array $columns = array('*'))
+    public function all(array $columns = array('*'))
     {
-        if (!$page) {
-            return $this->model->get($columns);
-        }
-        else {
-            return $this->model->forPage($page, Config::get('restwell::pagelimit'))->get($columns);
-        }
+        return $this->model->get($columns);
+    }
+
+    /**
+     * Return a collection filled with instances from default model with pagination.
+     *
+     * @param  array $columns
+     * @return Illuminate\Database\Eloquent\Collection
+     */
+    public function paginate(array $columns = array('*'))
+    {
+        return $this->model->paginate(Config::get('restwell::pagelimit'), $columns);
     }
 
     /**
