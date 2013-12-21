@@ -2,21 +2,20 @@
 
 namespace Demir\Restwell\Validator;
 
-use BadMethodCallException;
 use Illuminate\Support\Facades\Validator;
 
 abstract class BaseValidator
 {
     protected $errors;
 
-    public function _getErrors()
+    public function getErrors()
     {
         return $this->errors;
     }
 
-    public function _isValid($attributes)
+    public function isValidFor($attributes, $ruleset)
     {
-        $v = Validator::make($attributes, static::$rules);
+        $v = Validator::make($attributes, static::$rules[$ruleset]);
 
         if ($v->fails()) {
             $this->errors = $v->messages();
@@ -26,21 +25,8 @@ abstract class BaseValidator
         return true;
     }
 
-    public static function __callStatic($method, $args)
+    public function isValid($attributes)
     {
-        $allowedMethods = ['isValid', 'getErrors'];
-
-        if (in_array($method, $allowedMethods)) {
-            $validator = new static;
-
-            switch ($method) {
-                case 'isValid':
-                    return $validator->_isValid($args[0]);
-                case 'getErrors':
-                    return $validator->_getErrors();
-            }
-        }
-
-        throw new BadMethodCallException('Invalid method call from static context.');
+        return $this->isValidFor($attributes, 'default');
     }
 }
