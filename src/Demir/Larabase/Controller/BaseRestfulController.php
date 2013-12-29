@@ -12,7 +12,7 @@ use Demir\Larabase\Repository\RepositoryInterface;
 /**
  * Class BaseController with RESTful features.
  *
- * @package Demir\Restwell
+ * @package Demir\Larabase
  */
 class BaseRestfulController extends BaseAuthController
 {

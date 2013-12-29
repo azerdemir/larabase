@@ -9,14 +9,14 @@ use Demir\Larabase\Model\ModelInterface;
 /**
  * Class BaseRepository for encapsulating basic methods for all repositories.
  *
- * @package Demir\Restwell\Repository
+ * @package Demir\Larabase\Repository
  */
 abstract class BaseRepository implements RepositoryInterface
 {
     /**
      * Default model instance for service.
      *
-     * @var Demir\Restwell\Model\ModelInterface
+     * @var Demir\Larabase\Model\ModelInterface
      */
     protected $model;
 
@@ -64,7 +64,7 @@ abstract class BaseRepository implements RepositoryInterface
      */
     public function paginate(array $columns = array('*'))
     {
-        return $this->model->paginate(Config::get('restwell::pagelimit'), $columns);
+        return $this->model->paginate(Config::get('larabase::pagelimit'), $columns);
     }
 
     /**
@@ -72,7 +72,7 @@ abstract class BaseRepository implements RepositoryInterface
      *
      * @param  int   $id
      * @param  array $columns
-     * @return Demir\Restwell\Model\ModelInterface
+     * @return Demir\Larabase\Model\ModelInterface
      */
     public function find($id, array $columns = array('*'))
     {

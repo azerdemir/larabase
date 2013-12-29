@@ -9,7 +9,7 @@ class BaseAuthController extends BaseController
 {
     public function __construct(RepositoryInterface $repository)
     {
-        $this->beforeFilter(Config::get('restwell::auth_filter'));
+        $this->beforeFilter(Config::get('larabase::auth_filter'));
 
         parent::__construct($repository);
     }

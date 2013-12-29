@@ -12,7 +12,7 @@ class BaseController extends Controller
     /**
      * Repository object.
      *
-     * @var Demir\Restwell\BaseRepository
+     * @var Demir\Larabase\BaseRepository
      */
     protected $repository;
 
@@ -21,7 +21,7 @@ class BaseController extends Controller
         $this->repository = $repository;
 
         if (!isset($this->layout)) {
-            $masterLayout = Config::get('restwell::layouts.master');
+            $masterLayout = Config::get('larabase::layouts.master');
 
             if (!empty($masterLayout)) {
                 $this->layout = $masterLayout;
