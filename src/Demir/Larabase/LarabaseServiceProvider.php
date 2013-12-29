@@ -1,10 +1,10 @@
 <?php
 
-namespace Demir\Restwell;
+namespace Demir\Larabase;
 
 use Illuminate\Support\ServiceProvider;
 
-class RestwellServiceProvider extends ServiceProvider
+class LarabaseServiceProvider extends ServiceProvider
 {
     /**
      * Indicates if loading of the provider is deferred.
@@ -20,7 +20,7 @@ class RestwellServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->package('demir/restwell');
+        $this->package('demir/larabase');
     }
 
     /**
