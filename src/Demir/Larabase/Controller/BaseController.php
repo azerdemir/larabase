@@ -1,11 +1,11 @@
 <?php
 
-namespace Demir\Restwell\Controller;
+namespace Demir\Larabase\Controller;
 
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\View;
-use Demir\Restwell\Repository\RepositoryInterface;
+use Demir\Larabase\Repository\RepositoryInterface;
 
 class BaseController extends Controller
 {

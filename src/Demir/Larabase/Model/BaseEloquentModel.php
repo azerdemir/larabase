@@ -1,6 +1,6 @@
 <?php
 
-namespace Demir\Restwell\Model;
+namespace Demir\Larabase\Model;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Support\Facades\Validator;

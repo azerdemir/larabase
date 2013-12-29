@@ -1,6 +1,6 @@
 <?php
 
-namespace Demir\Restwell\Model;
+namespace Demir\Larabase\Model;
 
 interface ModelInterface
 {

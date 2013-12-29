@@ -1,6 +1,6 @@
 <?php
 
-namespace Demir\Restwell\Validator;
+namespace Demir\Larabase\Validator;
 
 use Illuminate\Support\Facades\Validator;
 

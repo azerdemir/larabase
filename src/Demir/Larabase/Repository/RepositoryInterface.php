@@ -1,6 +1,6 @@
 <?php
 
-namespace Demir\Restwell\Repository;
+namespace Demir\Larabase\Repository;
 
 interface RepositoryInterface
 {

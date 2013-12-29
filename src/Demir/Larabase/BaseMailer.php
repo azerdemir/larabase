@@ -1,6 +1,6 @@
 <?php
 
-namespace Demir\Restwell;
+namespace Demir\Larabase;
 
 use Illuminate\Support\Facades\Mail;
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace Demir\Restwell\Controller;
+namespace Demir\Larabase\Controller;
 
 use Illuminate\Support\Facades\Config;
-use Demir\Restwell\Repository\RepositoryInterface;
+use Demir\Larabase\Repository\RepositoryInterface;
 
 class BaseAuthController extends BaseController
 {

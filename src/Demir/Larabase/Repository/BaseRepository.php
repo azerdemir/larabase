@@ -1,10 +1,10 @@
 <?php
 
-namespace Demir\Restwell\Repository;
+namespace Demir\Larabase\Repository;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Config;
-use Demir\Restwell\Model\ModelInterface;
+use Demir\Larabase\Model\ModelInterface;
 
 /**
  * Class BaseRepository for encapsulating basic methods for all repositories.

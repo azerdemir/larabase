@@ -1,5 +1,5 @@
 {
-    "name": "demir/restwell",
+    "name": "demir/larabase",
     "description": "",
     "authors": [
         {
@@ -16,7 +16,7 @@
             "src/migrations"
         ],
         "psr-0": {
-            "Demir\\Restwell": "src/"
+            "Demir\\Larabase": "src/"
         }
     },
     "minimum-stability": "dev"

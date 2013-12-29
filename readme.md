@@ -1,3 +1,3 @@
-Restwell
+Larabase
 ========
-Restwell is a collection of base classes for projects using Laravel PHP framework.
+Larabase is a collection of base classes for projects using Laravel PHP framework.
