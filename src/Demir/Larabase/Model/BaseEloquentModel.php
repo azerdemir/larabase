@@ -30,6 +30,7 @@ abstract class BaseEloquentModel extends Eloquent implements ModelInterface
         return $this->errors;
     }
 
+    //TODO: Move validation to static:saving(...) event
     public function save(array $options = array())
     {
         if (!$this->validate()) {
