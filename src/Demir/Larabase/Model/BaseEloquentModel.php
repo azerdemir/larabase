@@ -5,13 +5,15 @@ namespace Demir\Larabase\Model;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Support\Facades\Validator;
 
-abstract class BaseEloquentModel extends Eloquent implements ModelInterface
+abstract class BaseEloquentModel extends Eloquent
 {
     protected $softDelete = true;
 
     protected $rules = array();
 
     protected $errors;
+
+    protected $modelCaching = false;
 
     public function validate()
     {
