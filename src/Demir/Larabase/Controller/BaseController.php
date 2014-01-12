@@ -9,17 +9,8 @@ use Demir\Larabase\Repository\RepositoryInterface;
 
 class BaseController extends Controller
 {
-    /**
-     * Repository object.
-     *
-     * @var Demir\Larabase\BaseRepository
-     */
-    protected $repository;
-
-    public function __construct(RepositoryInterface $repository)
+    public function __construct()
     {
-        $this->repository = $repository;
-
         if (!isset($this->layout)) {
             $masterLayout = Config::get('larabase::layouts.master');
 

@@ -7,10 +7,10 @@ use Demir\Larabase\Repository\RepositoryInterface;
 
 class BaseAuthController extends BaseController
 {
-    public function __construct(RepositoryInterface $repository)
+    public function __construct()
     {
-        $this->beforeFilter(Config::get('larabase::auth_filter'));
+        parent::__construct();
 
-        parent::__construct($repository);
+        $this->beforeFilter(Config::get('larabase::auth_filter'));
     }
 }

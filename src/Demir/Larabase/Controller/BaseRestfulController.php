@@ -17,6 +17,13 @@ use Demir\Larabase\Repository\RepositoryInterface;
 class BaseRestfulController extends BaseAuthController
 {
     /**
+     * Repository object for common operations.
+     *
+     * @var mixed
+     */
+    protected $repository;
+
+    /**
      * Route prefix for routes.
      *
      * @var string
@@ -63,7 +70,9 @@ class BaseRestfulController extends BaseAuthController
      */
     public function __construct(RepositoryInterface $repository)
     {
-        parent::__construct($repository);
+        parent::__construct();
+
+        $this->repository = $repository;
     }
 
     /**

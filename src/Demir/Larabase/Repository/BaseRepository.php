@@ -20,16 +20,6 @@ abstract class BaseRepository implements RepositoryInterface
      */
     protected $model;
 
-    /**
-     * Constructor for BaseRepository class.
-     *
-     * @param ModelInterface $model
-     */
-    public function __construct(ModelInterface $model)
-    {
-        $this->model = $model;
-    }
-
     public function getModel()
     {
         return $this->model;
